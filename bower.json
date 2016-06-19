@@ -1,0 +1,24 @@
+{
+  "name": "localforage-removeitems",
+  "version": "1.0.0",
+  "main": [
+    "dist/localforage-removeitems.js"
+  ],
+  "ignore": [
+    ".travis.yml",
+    "CONTRIBUTING.md",
+    "config.rb",
+    "Gemfile",
+    "Gemfile.lock",
+    "Rakefile",
+    "LICENSE",
+    "build*",
+    "docs*",
+    "examples*",
+    "test*",
+    "site*"
+  ],
+  "dependencies": {
+    "localforage": ">=1.4.0"
+  }
+}
