@@ -56,7 +56,7 @@
 
                 transaction.onabort = transaction.onerror = function () {
                     var err;
-                    for (var i = 0, len = requests.length; i < len; i++) {
+                    for (var i = 0, len = requests.length; i < len && !err; i++) {
                         var req = requests[i];
                         err = req.error ? req.error : req.transaction.error;
                     }
