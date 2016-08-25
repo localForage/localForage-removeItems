@@ -39,20 +39,24 @@
                 var dbInfo = localforageInstance._dbInfo;
                 var transaction = dbInfo.db.transaction(dbInfo.storeName, 'readwrite');
                 var store = transaction.objectStore(dbInfo.storeName);
-                var lastError;
+                var firstError;
 
                 transaction.oncomplete = function () {
                     resolve();
                 };
 
                 transaction.onabort = transaction.onerror = function () {
-                    reject(lastError || transaction.error || 'Unknown error');
+                    if ( !firstError ) {
+                        reject(transaction.error || 'Unknown error');
+                    }
                 };
 
                 function requestOnError(evt) {
                     var request = evt.target || this;
-                    lastError = request.error || request.transaction.error;
-                    reject(lastError);
+                    if ( !firstError ) {
+                        firstError = request.error || request.transaction.error;
+                        reject(firstError);
+                    }
                 }
 
                 for (var i = 0, len = keys.length; i < len; i++) {
