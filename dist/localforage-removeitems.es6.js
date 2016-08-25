@@ -33,30 +33,31 @@ function removeItemsIndexedDB(keys, callback) {
             var dbInfo = localforageInstance._dbInfo;
             var transaction = dbInfo.db.transaction(dbInfo.storeName, 'readwrite');
             var store = transaction.objectStore(dbInfo.storeName);
-
-            var requests = [];
-            for (var i = 0, len = keys.length; i < len; i++) {
-                var key = keys[i];
-                if (typeof key !== 'string') {
-                    console.warn(key + ' used as a key, but it is not a string.');
-                    key = String(key);
-                }
-                requests.push(store.delete(key));
-            }
+            var lastError;
 
             transaction.oncomplete = function () {
                 resolve();
             };
 
             transaction.onabort = transaction.onerror = function () {
-                var err;
-                for (var i = 0, len = requests.length; i < len && !err; i++) {
-                    var req = requests[i];
-                    err = req.error ? req.error : req.transaction.error;
-                }
-
-                reject(err ? err : transaction.error ? transaction.error : 'Unknown error');
+                reject(lastError || transaction.error || 'Unknown error');
             };
+
+            function requestOnError(evt) {
+                var request = evt.target || this;
+                lastError = request.error || request.transaction.error;
+                reject(lastError);
+            }
+
+            for (var i = 0, len = keys.length; i < len; i++) {
+                var key = keys[i];
+                if (typeof key !== 'string') {
+                    console.warn(key + ' used as a key, but it is not a string.');
+                    key = String(key);
+                }
+                var request = store.delete(key);
+                request.onerror = requestOnError;
+            }
         });
     });
     executeCallback(promise, callback);
