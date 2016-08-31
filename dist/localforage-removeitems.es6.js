@@ -40,14 +40,14 @@ function removeItemsIndexedDB(keys, callback) {
             };
 
             transaction.onabort = transaction.onerror = function () {
-                if ( !firstError ) {
+                if (!firstError) {
                     reject(transaction.error || 'Unknown error');
                 }
             };
 
             function requestOnError(evt) {
                 var request = evt.target || this;
-                if ( !firstError ) {
+                if (!firstError) {
                     firstError = request.error || request.transaction.error;
                     reject(firstError);
                 }
