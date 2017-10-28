@@ -119,8 +119,8 @@ function localforageRemoveItems() /*keys, callback*/{
     }
 }
 
-function extendPrototype(localforage) {
-    var localforagePrototype = Object.getPrototypeOf(localforage);
+function extendPrototype(localforage$$1) {
+    var localforagePrototype = Object.getPrototypeOf(localforage$$1);
     if (localforagePrototype) {
         localforagePrototype.removeItems = localforageRemoveItems;
         localforagePrototype.removeItems.indexedDB = function () {
